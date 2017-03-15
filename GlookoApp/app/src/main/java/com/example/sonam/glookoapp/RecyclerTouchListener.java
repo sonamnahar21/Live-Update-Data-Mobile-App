@@ -1,9 +1,4 @@
 package com.example.sonam.glookoapp;
-
-/**
- * Created by Sonam on 3/14/2017.
- */
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;

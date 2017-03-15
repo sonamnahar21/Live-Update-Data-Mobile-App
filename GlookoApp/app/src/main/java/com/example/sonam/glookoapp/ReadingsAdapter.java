@@ -10,11 +10,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-/**
- * Created by Sonam on 3/14/2017.
- */
 
 public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.MyViewHolder> {
     private List<Readings> readingsList;
