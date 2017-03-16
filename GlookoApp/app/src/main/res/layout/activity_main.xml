@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity"
+
    >
 
    <android.support.design.widget.AppBarLayout
@@ -34,11 +35,10 @@
         android:textSize="12dp"
         android:background="@drawable/rounded_corner"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
         android:layout_marginTop="@dimen/my_view_margin"
         />
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_main"/>
 
 
 </RelativeLayout>

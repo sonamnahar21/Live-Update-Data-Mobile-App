@@ -9,11 +9,12 @@
     android:paddingBottom="10dp"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/row">
 
     <TextView
         android:id="@+id/bg_value"
-        android:textColor="@color/bg_value"
+        android:textColor="@color/test"
         android:textSize="18dp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
@@ -25,15 +26,15 @@
         android:layout_below="@id/bg_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/timestamp"
-        android:textStyle="bold"/>
+        android:textColor="@color/black"
+        />
 
     <TextView
         android:id="@+id/meal"
-        android:textColor="@color/meal"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content"
-        android:textStyle="bold"/>
+        />
 
 </RelativeLayout>

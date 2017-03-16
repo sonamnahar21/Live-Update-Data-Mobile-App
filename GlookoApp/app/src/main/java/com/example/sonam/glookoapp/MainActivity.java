@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView txtDate= (TextView) this.findViewById(R.id.txtStickyHeader);
         setSupportActionBar(toolbar);
+        prepareData();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-        prepareData();
-        mAdapter = new ReadingsAdapter(readingsList);
+        mAdapter = new ReadingsAdapter(readingsList,txtDate,recyclerView);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -46,24 +46,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Readings readings = readingsList.get(position);
-                Toast.makeText(getApplicationContext(), readings.getBg_value() + " is selected!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
+        // OnScrollListener for recycler view
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int ydy = 0;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
+                // get the first and last position from layout manager
                 LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
                 int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
                 Log.d("First item",firstVisiblePosition+"");
@@ -76,35 +66,17 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
-            /*@Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int offset = dy - ydy;
-                ydy = dy;
-
-            }*/
         });
     }
+    // to show the date on sticky header
     public void getItem(int startPosition,int lastPosition) {
         Log.d("data",readingsList.get(startPosition).getTimeStamp()+"-"+readingsList.get(lastPosition).getTimeStamp());
         TextView txtDate= (TextView) this.findViewById(R.id.txtStickyHeader);
-        txtDate.setVisibility(View.VISIBLE);
-        Date startDate=null,endDate=null;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM, d yyyy");
-        try {
-            startDate=formatter.parse(readingsList.get(startPosition).getTimeStamp());
-            endDate=formatter.parse(readingsList.get(lastPosition).getTimeStamp());
-        }
-        catch (Exception e)
-        {
-            Log.e("Error",e.getMessage());
-        }
 
-        txtDate.setText(outputFormat.format(startDate)+" - "+outputFormat.format(endDate));
+        String formattedLabel= getFormattedLabel(readingsList.get(startPosition).getTimeStamp(), readingsList.get(lastPosition).getTimeStamp());
+        txtDate.setText(formattedLabel);
     }
-
+    // to read data from json string and add data to list
     private void prepareData() {
 
         String json= "[{ bg_value: 150, timeStamp: '2015-04-28T11:15:34', meal: 'before_meal'}, {bg_value: 90, timeStamp: ' 2015-04-16T11:15:34'}, {bg_value: 250, timeStamp:'2015-04-17T11:15:34', meal: 'after_meal'},{ bg_value: 150, timeStamp: '2015-04-18T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-19T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-20T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-21T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-22T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-23T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-24T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-25T11:15:34', meal: 'before_meal'},{ bg_value: 150, timeStamp: '2015-04-26T11:15:34', meal: 'before_meal'}]";
@@ -115,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
             for (Readings r:readingsList) {
                 Log.d("item",r.getBg_value()+" "+r.getMeal()+" "+r.getTimeStamp());
             }
-
-
+            //to sort the readingsList for timestamp
             Collections.sort(readingsList, new Comparator<Readings>()
             {
                 public int compare(Readings o1, Readings o2) {
@@ -133,17 +104,27 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
             mAdapter.notifyDataSetChanged();
         }
         catch (Exception e)
         {
             Log.e("Error",e.getMessage());
         }
-
     }
-
-
-
-
+    // returns formatted label for sticky header
+    public static String getFormattedLabel(String strStartDate, String strEndDate)
+    {
+        Date startDate=null,endDate=null;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM, d yyyy");
+        try {
+            startDate=formatter.parse(strStartDate);
+            endDate=formatter.parse(strEndDate);
+        }
+        catch (Exception e)
+        {
+            Log.e("Error",e.getMessage());
+        }
+        return outputFormat.format(startDate)+" - "+outputFormat.format(endDate);
+    }
 }
