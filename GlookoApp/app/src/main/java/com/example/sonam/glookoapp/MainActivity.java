@@ -1,17 +1,24 @@
 package com.example.sonam.glookoapp;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.spyhunter99.supertooltips.ToolTip;
+import com.spyhunter99.supertooltips.ToolTipManager;
+
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Readings> readingsList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ReadingsAdapter mAdapter;
+    ToolTipManager tooltips;
 
 
     @Override
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView txtDate= (TextView) this.findViewById(R.id.txtStickyHeader);
+        tooltips = new ToolTipManager(this);
         setSupportActionBar(toolbar);
         prepareData();
 
@@ -45,6 +54,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Readings readings = readingsList.get(position);
+                ToolTip toolTip = new ToolTip()
+                        .withText("BG Value: "+ readings.getBg_value()+"\n"+"Meal: "+readings.getMeal()+"\nTimeStamp: "+readings.getTimeStamp())
+                        .withTextColor(Color.WHITE)
+                        .withColor(R.color.black)
+                        .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                        .withShadow();
+                tooltips.showToolTip(toolTip, view);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         // OnScrollListener for recycler view
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -8,13 +8,13 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    android:id="@+id/row">
+    android:id="@+id/row"
+    android:background="@drawable/selector">
 
     <TextView
         android:id="@+id/bg_value"
-        android:textColor="@color/test"
+        android:textColor="@color/pink"
         android:textSize="18dp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"

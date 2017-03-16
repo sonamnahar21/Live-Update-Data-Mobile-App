@@ -9,5 +9,7 @@
     <color name="bg_value">#CFA7F5</color>
     <color name="toolbar">#0091EE</color>
     <color name="black">#000</color>
-    <color name="test">#FC607D</color>
+    <color name="white">#FFFFFF</color>
+    <color name="pink">#FC607D</color>
+
 </resources>
