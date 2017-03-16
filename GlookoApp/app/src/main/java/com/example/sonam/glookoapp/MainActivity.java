@@ -1,16 +1,13 @@
 package com.example.sonam.glookoapp;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,16 +53,28 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            // added tooltip code for item clicked event
             @Override
             public void onClick(View view, int position) {
                 Readings readings = readingsList.get(position);
-                ToolTip toolTip = new ToolTip()
-                        .withText("BG Value: "+ readings.getBg_value()+"\n"+"Meal: "+readings.getMeal()+"\nTimeStamp: "+readings.getTimeStamp())
-                        .withTextColor(Color.WHITE)
-                        .withColor(R.color.black)
-                        .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
-                        .withShadow();
-                tooltips.showToolTip(toolTip, view);
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                    Date date = formatter.parse(readings.getTimeStamp());
+                    System.out.println(formatter.format(date));
+
+                    ToolTip toolTip = new ToolTip()
+                            .withText("BG Value: "+ readings.getBg_value()+"\n"+"Meal: "+readings.getMeal()+"\nTimeStamp: "+outputFormat.format(date))
+                            .withTextColor(Color.WHITE)
+                            .withColor(R.color.black)
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, view);
+                }
+                catch (Exception e)
+                {
+                    Log.d("Exception",e.getMessage());
+                }
             }
 
             @Override
@@ -95,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        tooltips.onDestroy();
+        tooltips = null;
     }
     // to show the date on sticky header
     public void getItem(int startPosition,int lastPosition) {
@@ -127,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     catch (Exception e)
                     {
-                        Log.d("Error",e.getMessage());
+                        Log.d("Exception",e.getMessage());
                         return 5;
                     }
                 }
@@ -151,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
-            Log.e("Error",e.getMessage());
+            Log.e("Exception",e.getMessage());
         }
         return outputFormat.format(startDate)+" - "+outputFormat.format(endDate);
     }

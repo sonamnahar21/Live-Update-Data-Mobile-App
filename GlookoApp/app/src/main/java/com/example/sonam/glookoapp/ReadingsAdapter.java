@@ -73,7 +73,7 @@ public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.MyView
         }
         catch (Exception e)
         {
-            Log.d("Error",e.getMessage());
+            Log.d("Exception",e.getMessage());
         }
     }
 
